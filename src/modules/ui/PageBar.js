@@ -153,13 +153,13 @@
                         (page < total?'visible':'hidden')+'">下一页</a>');
             
             ah.push([
-    	         '<ins><form onsubmit="javascript:return false;">',
+    	         '<ins><form>',
     	         	'<span>共'+this.config.totalNum+'条记录</span>',
     	         	this.config.jumpTo ? [
 	    	         	'<span>，跳到第</span>',
 	    	         	'<input type="text" class="ui_pageBar_jumpto" >',
 	    	         	'<span>/'+total+'页</span>',
-	    	         	'<button class="ui_pageBar_jump">确定</button>'].join('') : "",
+	    	         	'<button type="button" class="ui_pageBar_jump">确定</button>'].join('') : "",
 	         	'</form></ins>'
 	         ].join(''));
 
@@ -190,7 +190,7 @@
                 page = this.val;
             this.domEl.on('click','.ui_pageBar_jump',function(){
             	var jumpVal = $(this).siblings(".ui_pageBar_jumpto").val();
-            	_this.updatePage(jumpVal);
+            	jumpVal && _this.updatePage(jumpVal);
             }).on('keypress','.ui_pageBar_jumpto',function(e){
             	if(e.keyCode === 13){
             		_this.updatePage($(this).val());

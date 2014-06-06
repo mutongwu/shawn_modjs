@@ -1,5 +1,5 @@
 /*日期输入控件*/
-.ui_datePicker_box{visibility:hidden;position:absolute;top:0;left:0;padding:0 1px;font-family:"宋体";border:1px solid #ccc;background-color:#fff;}
+.ui_datePicker_box{visibility:hidden;position:absolute;top:0;left:0;padding:0 1px;font-family:"宋体";font-size:12px;border:1px solid #ccc;background-color:#fff;}
 .ui_datePicker_box td,.ui_datePicker_box th{cursor:pointer;}
 .ui_datePicker_names{background-color:#BDEBEE;}
 .ui_datePicker_hd .ui_datePicker_currYear{margin-right:8px;} 

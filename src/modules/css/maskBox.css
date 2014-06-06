@@ -12,7 +12,7 @@
 .ui_Mask_box .loading_box{position:absolute;width:180px;/*overflow:auto;*/height:30px;line-height:30px;text-align:left;font-weight:bold;font-size:14px;background-color:#fff;
 	border-radius:5px;padding:10px;top:50%;left:50%;margin-left:-100px;margin-top:-25px;}
 .ui_Mask_box.fullpage	.loading_box{_margin-top:expression(documentElement.scrollTop - 25);}
-.ui_Mask_box .opacity_bg{background:url(../img/opacity.png) repeat 0 0;}
+.ui_Mask_box .opacity_bg{background-color:#cedce9;}
 .ui_Mask_box .ui_loading{text-align:center;padding-left:20px;background:url(../img/icon_loading.gif) no-repeat 0 8px;}
 
 .ui_Mask_box .mask_container{}
