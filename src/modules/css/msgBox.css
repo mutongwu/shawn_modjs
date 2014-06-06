@@ -1,0 +1,36 @@
+/*消息弹出框*/
+.ui_msgBox_box{top:50%;left:50%;/*border:1px solid #ff0;*/border-radius:5px;background-color:#cedce9;transition: opacity 500ms;}
+.ui_msgBox_cnt{text-align:left;}
+.ui_msgBox_box .ui_msgBox_hd{position:relative;font-size:14px;line-height:28px;height:28px;text-align:left;font-weight:bold;padding:5px 10px;
+border-bottom:1px solid #A9A9A9;
+}
+.ui_msgBox_hd .ui_ico_close{position:absolute;top:5px;right:10px;font-family:"宋体";color:#666;}
+.ui_msgBox_hd .ui_ico_close:hover{color:#f00;}
+.ui_msgBox_box .ui_msgBox_msgType{position:relative;border-radius:5px;}
+.ui_msgBox_box .ui_msgBox_msgType .ui_msgBox_content{padding:4px 5px 4px 40px;}
+/*提示的背景色*/
+.ui_msgBox_box  .ui_msgBox_info{border: 1px solid #40BEFF;	background-color: #E6F5FF;}
+.ui_msgBox_box  .ui_msgBox_warn{border: 1px solid #CB6C33;	background-color: #FFD400;}
+.ui_msgBox_box  .ui_msgBox_error{border: 1px solid #FF8080;	background-color: #FFF2F2;}
+.ui_msgBox_box  .ui_msgBox_question{	border: 1px solid #BFBFBF;	background-color: #F2F2F2;}
+.ui_msgBox_box  .ui_msgBox_success{border: 1px solid #4DBF00;	background-color: #F0FFE5;}
+
+/*提示的图标*/
+.ui_msgBox_box .ui_msgBox_msgType i{position:absolute;display:block;width:30px;height:30px;/*top:5px;*/top:50%;margin-top:-15px;left:8px;zoom:1;overflow:hidden;background:url(../img/msg_icons.png) no-repeat 0 0;_background-image:url(../img/msg_icons.gif);}
+.ui_msgBox_box .ui_msgBox_info i{background-position: 0 -124px;}
+.ui_msgBox_box .ui_msgBox_warn i{background-position: 0 0;}
+.ui_msgBox_box .ui_msgBox_error i{background-position: 0 -93px;}
+.ui_msgBox_box .ui_msgBox_confirm i,.ui_msgBox_box .ui_msgBox_question i{background-position: 0 -62px;}
+.ui_msgBox_box .ui_msgBox_success i{background-position: 0 -31px;}
+
+.ui_msgBox_hd .ui_msgBox_title{}
+.ui_msgBox_box .ui_msgBox_bd{min-width:120px;min-height:22px;_height:25px;padding:5px 0px;}
+.ui_msgBox_box .ui_msgBox_ft{text-align:right;padding:8px;border-top:1px solid #A9A9A9;}
+.ui_msgBox_box .ui_msgBox_ft.tl{text-align:left;}
+.ui_msgBox_box .ui_msgBox_ft.tc{text-align:center;}
+
+.ui_msgBox_box .ui_msgBox_ft .btn{margin-right:12px;}
+.ui_msgBox_box .ui_msgBox_ft.tc .btn{margin-right:0;}
+/*.opacity_bg{background-image:url(../img/opacity.png);}*/
+
+.ui_msgBox_iframe{width:1px;height:1px;visibility:hidden;}

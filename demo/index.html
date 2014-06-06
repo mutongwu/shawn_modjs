@@ -1,0 +1,33 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+<div id="aDiv" draggable="true" style="border:1px solid #ff0;width:200px;height:300px;position:absolute;top:5px;left:20px;"
+	  >
+  This text <strong>may</strong> be dragged.
+</div>
+<script type="text/javascript">
+document.getElementById("aDiv").ondragstart = dragWithCustomImage;
+function dragWithCustomImage(event)
+{
+  var canvas = document.createElementNS("http://www.w3.org/1999/xhtml","html:canvas");
+  canvas.width = canvas.height = 50;
+
+  var ctx = canvas.getContext("2d");
+  ctx.lineWidth = 4;
+  ctx.moveTo(0, 0);
+  ctx.lineTo(50, 50);
+  ctx.moveTo(0, 50);
+  ctx.lineTo(50, 0);
+  ctx.stroke();
+
+  var dt = event.dataTransfer;
+  dt.setData('text/plain', '');
+  dt.setDragImage(canvas, 25, 25);
+}
+</script>
+</body>
+</html>
