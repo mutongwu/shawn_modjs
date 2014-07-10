@@ -54,7 +54,7 @@
             // alert/confirm/none
             type:'alert',
             
-            //info/warn/error/success/question/(empty)
+            //info/warn/error/success/question/loading/(empty)
             msgType: '',
 
             //启用tip的样式

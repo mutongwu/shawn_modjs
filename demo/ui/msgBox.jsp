@@ -28,6 +28,7 @@
 <input type="button" id="get5" value="自定义宽高" />
 <input type="button" id="get6" value="载入iframe" />
 <input type="button" id="get7" value="可拖动" />
+<input type="button" id="get8" value="loading" />
 
 <p>https://github.com/beviz/jquery-caret-position-getter/blob/master/jquery.caretposition.js
 http://msdn.microsoft.com/en-us/library/ie/ms535872(v=vs.85).aspx
@@ -144,6 +145,7 @@ http://www.csdn.net/article/2012-12-20/2813026-nine-step-of-PM
 			new MsgBox({
 				title: "提示",
 				body: '数据载入中...',
+				msgType: 'loading',
 				draggable: true
 			});
 		});
