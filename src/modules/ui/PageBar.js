@@ -6,7 +6,8 @@
  */    
 	var $ = require('lib/jquery'),
         template =require('lib/template');
-    
+	var Lang = require('lib/lang');
+	
     function PageBar(cfg){
         $.extend(this,{
             config:{},
@@ -99,7 +100,7 @@
                 maxPage = this.config.maxPage; //显示项个数
 
             ah.push('<a href="#" class="ui_pageBar_previous" style="visibility:' +
-                        (page > 1?'visible':'hidden')+'">上一页</a>');
+                        (page > 1?'visible':'hidden')+'">'+Lang.i18n('pageBar.prePage')+'</a>');
             if(total <= maxPage){
                 for(i=1; i<=total;i++){
                     if(i == page){
@@ -150,27 +151,33 @@
                 }
             }
             ah.push('<a href="#" class="ui_pageBar_next" style="visibility:' +
-                        (page < total?'visible':'hidden')+'">下一页</a>');
+                        (page < total?'visible':'hidden')+'">'+Lang.i18n('pageBar.nextPage')+'</a>');
             
-            ah.push([
-    	         '<ins><form>',
-    	         	'<span>共'+this.config.totalNum+'条记录</span>',
-    	         	this.config.jumpTo ? [
-	    	         	'<span>，跳到第</span>',
-	    	         	'<input type="text" class="ui_pageBar_jumpto" >',
-	    	         	'<span>/'+total+'页</span>',
-	    	         	'<button type="button" class="ui_pageBar_jump">确定</button>'].join('') : "",
-	         	'</form></ins>'
-	         ].join(''));
+            
+            var infoTpl = '<ins><form action="#"><span>' +  Lang.i18n('pageBar.totalTip',this.config.totalNum) + '</span>';
+            if(this.config.jumpTo){
+            	infoTpl += [
+		    	         	'<span>'+Lang.i18n('pageBar.jumpTo')+'</span>',
+		    	         	'<input type="text" class="ui_pageBar_jumpto" />',
+		    	         	'<span>/'+total+Lang.i18n('pageBar.page') + '</span>',
+		    	         	'<button type="button" class="ui_pageBar_jump">'+Lang.i18n('confirm')+'</button>'
+		    	         	].join(''); 
+            }
+         	infoTpl += '</form></ins>';    	     
+            ah.push(infoTpl);
 
             if(this.config.psCustom){
-            	var tmp = '';
+            	var tmp = '' ,
+            		cusTpl = '<dd class="{{cls}}">{{num}}{{unit}}</dd>';
             	if(this.config.psList){
             		$.each(this.config.psList,function(i,item){
-            			tmp += '<dd class="'+ (item === _this.config.pageSize ? "curr": "")+'">' + item + '条</dd>';
+            			tmp +=  cusTpl
+            					.replace('{{cls}}',item === _this.config.pageSize ? "curr": "")
+            					.replace('{{num}}',item)
+            					.replace('{{unit}}',Lang.i18n('pageBar.unit'));
             		});
             	}
-            	ah.unshift('<a class="fr ui_pageBar_psCust"><span class="custTip">每页显示...</span><dl>'+ tmp +'</dl></a>');
+            	ah.unshift('<a class="fr ui_pageBar_psCust"><span class="custTip">'+Lang.i18n('pageBar.display')+'</span><dl>'+ tmp +'</dl></a>');
             }
             this.domEl.html(ah.join(''));
         },
@@ -194,6 +201,7 @@
             }).on('keypress','.ui_pageBar_jumpto',function(e){
             	if(e.keyCode === 13){
             		_this.updatePage($(this).val());
+            		return false;
             	}            	
             }).on('click','a',function(e){
                 var target = $(e.target);

@@ -8,6 +8,8 @@
     	BomHelper = require("util/BomHelper"),
     	Mask = require("ui/Mask"),
     	Button = require("ui/Button");
+    
+    var Lang = require('lib/lang');
     function MsgBox(cfg){
     	if(this instanceof MsgBox === false){
     		return new MsgBox(cfg);
@@ -169,14 +171,27 @@
                 domEl[method]({
 	                width: w,
 	                height: h,
-	                marginTop: BomHelper.isIE6 ? document.documentElement.scrollTop-(h/2) : -(h/2),
+	                marginTop:  -(h/2),
 	                marginLeft: - (w/2)
 	            },params && params.animateClb);
+                this._ie6Resize();
             }
             this.domEl.find('.ui_msgBox_ft .btn').focus();
             this.domEl.find('.ui_msgBox_bd input').focus();
         },
         
+        //调整弹窗在ie的位置
+        _ie6Timer: null,
+        _ie6Resize: function(){
+        	if(BomHelper.isIE6){
+        		var scrollTop = $(window).scrollTop();
+        		var el = this.domEl,
+        			viewH = document.documentElement.clientHeight ;
+        		el.css({"top": viewH/2  + scrollTop,"marginTop":-el.height()/2});
+        		this._ie6Timer = null;
+        	}
+        	
+        },
         setDraggable: function(){
             if(this.config.draggable){
                 var _this = this;
@@ -314,7 +329,7 @@
                 });
             }else{
                 btn = new Button({
-                    "text":'确定',
+                	"text":Lang.i18n('confirm'),
                     "event":"click",
                     "handler": function(){
                          if(!_this.config.onYes || 
@@ -331,7 +346,7 @@
                 if(this.config.type === "confirm"){
                     arr.push(btn);
                     arr.push(new Button({
-                            "text":'取消',
+                    		"text":Lang.i18n('cancel'),
                             "theme": "greybtn",
                             "event":"click",
                             "handler": function(){
@@ -370,6 +385,16 @@
                 this.timer = setTimeout(function(){
                     _this.close();
                 },this.config.time);
+            }
+            
+            if(BomHelper.isIE6 && !this.config.el){
+            	$(window).scroll(function(){
+            		if(!_this._ie6Timer){
+            			_this._ie6Timer = setTimeout(function(){
+            				_this._ie6Resize();
+            			},250);
+            		}            		
+            	});
             }
         }
     });

@@ -13,6 +13,9 @@
     	BomHelper = require('util/BomHelper'),
     	template = require('lib/template');
     
+    var Lang = require('lib/lang');
+    
+    
     // 遮盖层计数，值不为0时候，body的overflow属性值为 hidden.为了处理多个遮盖层的问题。
     var ie6Hack = 0;
     function Mask(cfg){
@@ -44,7 +47,7 @@
             clkClose:false ,
             
             //加载中的提示文本
-            msg: "数据加载中...",
+            msg: null,
             
             //是否需要手动调用mask方法显示遮盖层。默认为false，直接显示。
             lazy: false
@@ -97,8 +100,8 @@
          * @public 显示为加载中提示
          */
         loading: function(){
-            var msg = '<div class="loading_box opacity_bg" style="position:{position}"><p class="ui_loading">'+this.config.msg+'</p></div>';
-            msg = msg.replace(/\{position\}/g,this.getPosition());
+            var msg = '<div class="loading_box opacity_bg" style="position:{position}"><p class="ui_loading">{MSG}</p></div>';
+            msg = msg.replace(/\{position\}/g,this.getPosition()).replace('{MSG}',this.config.msg || Lang.i18n('loading'));
             this.html(msg);
         },
         
@@ -112,7 +115,7 @@
         updateDocStyle: function(val){
             if(BomHelper.isIE6 && !this.config.el){
                 ie6Hack += val;
-                document.documentElement.style.overflow = ie6Hack > 0 ?"hidden" : '';
+                //document.documentElement.style.overflow = ie6Hack > 0 ?"hidden" : '';
             }
         },
         
@@ -123,17 +126,37 @@
 	                _this.unMask();
 	            });
             }
-            
+            if(BomHelper.isIE6 && !this.config.el){
+            	var timer = null,
+            		setMarginTop = function(){
+            		var scrollTop = $(window).scrollTop();
+            		var el = _this.domEl.find('.loading_box'),
+            			s1 = el.css("marginTop"),
+            			viewH = document.documentElement.clientHeight ;
+            		el.css("top",  (viewH)/2  + scrollTop);
+            		timer = null;
+            	};
+            	$(window).scroll(function(){
+            		if(!timer){
+            			timer = setTimeout(setMarginTop,250);
+            		}            		
+            	});
+            	setMarginTop();
+            }
         },
         initDom: function(){
-            var content = '<div class="mask_layer" style="position:{position}">&nbsp;</div>'
-            			.replace(/\{position\}/,this.getPosition()),
-                temp = '';
+            var content = '<div class="mask_layer" style="{style}">&nbsp;</div>';
+                temp = "position:" + this.getPosition();
             
 	        if(BomHelper.isIE6){
 	            content = '<iframe class="sel_hack_iframe" frameborder="0" src="about:blank"></iframe>' + content;
+	            if(!this.config.el){
+	            	temp += ";width= " + Math.max(document.documentElement.scrollWidth,document.body.scrollWidth) + "px";
+		        	temp += ";height= " +  Math.max(document.documentElement.scrollHeight,document.body.scrollHeight) + "px";
+	            }
 	        }
 
+	        content = content.replace('{style}',temp);
             if(this.config.el){
                 var pos = this.config.el.offset();
                 temp = template.compile("position:absolute;top:{{top}}px;left:{{left}}px;width:{{width}}px;height:{{height}}px")
@@ -143,8 +166,6 @@
                             width: this.config.el.outerWidth(),
                             height: this.config.el.outerHeight()
                         });
-            }else if(BomHelper.isIE6){
-            	
             }
             content = '<div id="{id}" class="ui_Mask_box  {fullpage}" style="{style}">' + 
 		               	   content +

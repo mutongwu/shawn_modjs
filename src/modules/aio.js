@@ -1,6 +1,7 @@
 
 __inline('lib/fix.js');
 __inline('lib/mod.js');
+__inline('lib/lang.js');
 __inline('lib/jquery.js');
 __inline('lib/template.js');
 __inline('ui/Button.js');

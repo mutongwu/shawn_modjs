@@ -97,8 +97,8 @@ var require, define;
         return mod.exports;
     };
 
-    require.async = function(names, callback) {
-        if (typeof names == 'string') {
+    function asyncMoudle(names,callback){
+    	if (typeof names == 'string') {
             names = [names];
         }
         
@@ -145,6 +145,11 @@ var require, define;
         
         findNeed(names);
         updateNeed();
+    }
+    require.async = function(names, callback) {
+    	preloadMoudle(null,function(){
+        	asyncMoudle(names,callback);
+        });
     };
 
     require.resourceMap = function(obj) {
@@ -154,8 +159,38 @@ var require, define;
 
     require.alias = function(id) {return id;};
 
-//    define.amd = {
-//	    'jQuery': true,
-//	    'version': '1.0.0'
-//	};
+    var preloadMods = [];
+    function preloadMoudle(mods,callback){
+    	if(mods){
+        	if (typeof mods === 'string') {
+            	mods = [mods];
+            }
+        	preloadMods = preloadMods.concat(mods);
+        }
+    	var len = preloadMods.length;
+    	if(len){
+    		asyncMoudle(preloadMods,function(){
+    			preloadMods.splice(0, len);
+    			preloadMoudle(null,callback);
+    		});
+    	}else{
+    		callback();
+    	}
+    }
+    require.preload = function(mods,callback){
+    	if (typeof mods === 'string') {
+        	mods = [mods];
+        }
+    	var cacheMods = [].concat(mods);
+    	preloadMoudle(mods,function(){
+    		var params = [];
+    		for(var i=0; i< cacheMods.length;i++){
+    			params.push(require(cacheMods[i]));
+    		}
+    		callback.apply(null,params);
+    	});
+		
+    };
+
+    
 })(this);

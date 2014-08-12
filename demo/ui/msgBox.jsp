@@ -8,7 +8,10 @@
 <jsp:include page="/dist/headRes.html"></jsp:include>
 </head>
 <body>
+<style>
 
+	.longPage{height:500px;}
+</style>
 <div class="pageBox">内容<%=request.getContextPath()%></div>
 <div style="height: 200px;"></div>
 <div style="margin-left:100px;">
@@ -16,7 +19,12 @@
     
     <a id="abc" href="javascript:;">浮层</a>
 </div>
+<select>
+	<option>ie6</option>
+</select>
 <p>另外一个</p>
+<div class="setBox longPage"><input type="button" id="setH" value="修改页面高度" /></div>
+
 <textarea id="area2"  style="width: 400px; height: 100px"></textarea>
     
 <div class="box"></div>
@@ -28,7 +36,7 @@
 <input type="button" id="get5" value="自定义宽高" />
 <input type="button" id="get6" value="载入iframe" />
 <input type="button" id="get7" value="可拖动" />
-<input type="button" id="get8" value="loading" />
+<!-- input type="button" id="get8" value="loading" / -->
 
 <p>https://github.com/beviz/jquery-caret-position-getter/blob/master/jquery.caretposition.js
 http://msdn.microsoft.com/en-us/library/ie/ms535872(v=vs.85).aspx
@@ -37,7 +45,9 @@ http://help.dottoro.com/ljikwsqs.php
 http://www.csdn.net/article/2012-12-20/2813026-nine-step-of-PM
 </p>
 <script>
-
+require.preload(['i18n/zh-CN','lib/lang'],function(res,Lang){
+	Lang.setRes(res);
+});	
 	require.async(['lib/jquery','ui/MsgBox'],function(jQuery,MsgBox){
 		jQuery(function(){		
 		//基本应用
@@ -45,7 +55,7 @@ http://www.csdn.net/article/2012-12-20/2813026-nine-step-of-PM
 			new MsgBox({
 				title: "提示",
 			    body:'天涯问答邀您乐活双节：我问你答天天有礼！',
-			    
+			    //noMod:true,
 			    //控制按钮居中
 			    buttonAlign:'tc'
 			});
@@ -149,6 +159,11 @@ http://www.csdn.net/article/2012-12-20/2813026-nine-step-of-PM
 				draggable: true
 			});
 		});
+		
+		
+		$('#setH').click(function(){
+			$('.setBox').toggleClass("longPage");
+		})
 	});
 	
 });

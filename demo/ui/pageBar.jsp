@@ -19,7 +19,9 @@
 	</div>
 </div>
 <script>
-	
+require.preload(['i18n/zh-CN','lib/lang'],function(res,Lang){
+	Lang.setRes(res);
+});	
 		require.async(['lib/jquery','ui/PageBar'],function(jQuery,PageBar){
 			jQuery(function(){
 					var p1 = new PageBar({
