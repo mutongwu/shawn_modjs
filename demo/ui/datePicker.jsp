@@ -19,13 +19,16 @@
 		require.async(['lib/jquery','ui/DatePicker'],function(jQuery,DatePicker){
 			jQuery(function(){
 				var searchInput = new DatePicker({
-					el: jQuery('#search')
+					el: jQuery('#search'),
+					beforeEl: jQuery('#search2')//要求小于search2的值
 				});
 				
 				var searchInput2 = new DatePicker({
 					el: jQuery('#search2'),
 					hasTime:true,
-					format: 'YYYY-MM-DD hh:mm:ss'
+					//minVal: '2014-08-22 00:00:00',
+					format: 'yyyy-MM-dd hh:mm:ss',
+					afterEl: jQuery('#search') //要求大于search1的值
 				});
 				
 			});

@@ -51,13 +51,19 @@
            hasTime: false,
            
            //当前只支持 util/Format里面的日期格式.带时分秒的日期默认格式为 YYYY-MM-DD hh:mm:ss
-           format: "YYYY-MM-DD",
+           format: "yyyy-MM-dd",
            
            //日期最小值
-           minVal:'1970-01-01',
+           minVal: '1000-01-01',
            
            //日期最大值
-           maxVal:'2970-01-01'
+           maxVal:'9999-01-01',
+           
+           //关联小于值元素.则控件日期将小于该元素值。
+           beforeEl: null,
+           
+           //关联大于值元素。则控件日期将大于该元素值。
+           afterEl: null
        },
        
        
@@ -79,9 +85,34 @@
        days:[31,28,31,30,31,30,31,31,30,31,30,31,30],
        dayNames:["日","一","二","三","四","五","六"],
        
+       _setRange: function(){
+    	   var beforeVal = "",
+    	   	   afterVal = "";
+           if(this.config.beforeEl){
+        	   beforeVal = this.config.beforeEl.val();
+        	   if(beforeVal){
+        		   this.maxTime = beforeVal < this.config.maxVal  ? beforeVal: this.config.maxVal;
+        	   }else{
+        		   this.maxTime = this.config.maxVal
+        	   }
+           }
+           
+           if(this.config.afterEl){
+        	   afterVal = this.config.afterEl.val();
+        	   if(afterVal){
+        		   this.minTime =  afterVal > this.config.minVal? afterVal : this.config.minVal;
+        	   }else{
+        		   this.minTime = this.config.minVal;
+        	   }
+           }
+       },
        initVal: function(){
-           this.minTime = Format.parseDate(this.config.minVal).getTime();
-           this.maxTime = Format.parseDate(this.config.maxVal).getTime();
+    	   
+           this.minTime = this.config.minVal;
+           this.maxTime = this.config.maxVal;
+           
+
+           
            this.todayDt = new Date();
            
            var val = this.config.el.val() || this.config.val; 
@@ -106,7 +137,7 @@
            if(aCls){
                cls.push(aCls);
            }
-           var currTime = curr.getTime();
+           var currTime = Format.fmDate(curr,this.config.format);//curr.getTime();
            if( currTime <  this.minTime || currTime > this.maxTime){
                cls.push("inValid");
            }
@@ -207,6 +238,8 @@
        initDom: function(){
            var val = this.val;
            
+    	   this._setRange();
+    	   
            var hd = this.createHd();
            var ft = this.createFt();
            var bd = this.createDays(val.getFullYear(),val.getMonth(),val.getDate());
@@ -228,6 +261,8 @@
        update: function(){
            var year = this.val.getFullYear(),
                month = this.val.getMonth();
+           
+           this._setRange();
            
            var bd = this.createDays(year,month,this.val.getDate());
            this.domEl.find('tbody').eq(0).replaceWith(bd);
@@ -251,7 +286,7 @@
            if(!val){
                this.config.el.val("");
            }else{
-               var t = this.val.getTime();
+               var t = Format.fmDate(this.val,this.config.format);
 	           if(this.minTime < t && t < this.maxTime){
 	                this.config.el.val(Format.fmDate(val,this.config.format));
 	           }

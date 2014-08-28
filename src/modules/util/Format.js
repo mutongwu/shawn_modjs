@@ -126,35 +126,75 @@
             	dt = new Date(+dt);
             }
             if(!format){
-                format = 'YYYY-MM-DD';
+                format = 'yyyy-MM-dd';
             }
             function padZero(n){
             	return n > 9 ? n : '0' + n;
             }
-            return format.replace(/YYYY/,dt.getFullYear()).
-                    replace(/MM/,padZero(dt.getMonth()+1)).replace(/DD/,padZero(dt.getDate())).
+            return format.replace(/yyyy/,dt.getFullYear()).
+                    replace(/MM/,padZero(dt.getMonth()+1)).replace(/dd/,padZero(dt.getDate())).
                     replace(/hh/,padZero(dt.getHours())).replace(/mm/,padZero(dt.getMinutes())).
                     replace(/ss/,padZero(dt.getSeconds()));
         },
         parseDate: function(str,fm){
-            var dt = null;
-            if(!fm){
-                fm  = 'YYYY-MM-DD';
-            }
-            if(fm.length === 10 && /(\d{4})-(\d{1,2})-(\d{1,2})/.test(str)){
-                dt = new Date(parseInt(RegExp.$1,10),
-                    parseInt(RegExp.$2,10)-1, 
-                    parseInt(RegExp.$3,10));
-            }else if(/(\d{4})-(\d{1,2})-(\d{1,2})\s+(\d{1,2}):(\d{1,2}):(\d{1,2})/.test(str)){
-            	dt = new Date(parseInt(RegExp.$1,10),
-                        parseInt(RegExp.$2,10)-1, 
-                        parseInt(RegExp.$3,10),
-                        parseInt(RegExp.$4,10),
-                        parseInt(RegExp.$5,10),
-                        parseInt(RegExp.$6,10));
-            }
-            return dt;
-        }
+		    var start = 0,ch1 = null,ch2 = null;
+		    var chReg = /^[yMdhms]$/,
+		      nReg = /^\d$/;
+		    str = str.replace(/^\s+/g,'').replace(/\s+$/,'');
+		    fm = (fm || 'yyyy-MM-dd').replace(/^\s+/g,'').replace(/\s+$/,'');
+		    if(str.length !== fm.length){
+		        return null;
+		    }
+		
+		    var dtArr = [];
+		    function convert(start,end){
+		      var tmp = parseInt(str.substring(start,end),10);
+		            switch(ch1){
+		                case 'y' : dtArr[0] = tmp;break;
+		                case 'M' : dtArr[1] = tmp - 1;break;
+		                case 'd' : dtArr[2] = tmp;break;
+		                case 'h' : dtArr[3] = tmp;break;
+		                case 'm' : dtArr[4] = tmp;break;
+		                case 's' : dtArr[5] = tmp;break;
+		                default:  throw new Error("Invalid Date.");
+		            }
+		    }
+		
+		    ch1 = fm.charAt(i);
+		    var flag = true;//有效字符开始标志
+		    try{
+		      for(var i = 0,len = fm.length; i < len; i++){
+		          ch2 = fm.charAt(i);
+		          if(chReg.test(ch2) && nReg.test(str.charAt(i))){//有效日期字符
+		              if(ch2 === ch1){
+		                  continue;
+		              }else{//新的时间
+		                  ch1 = ch2;
+		                  if(flag){
+		                    convert(start,i);
+		                  }
+		                  flag = true;
+		                  start  = i;
+		              }
+		          }else if(ch2 === str.charAt(i)){
+		            if(flag){
+		              convert(start,i);
+		            }else{
+		              start  = i;
+		            }
+		            flag = false;
+		          }else{
+		            throw new Error('format no match.');
+		          }
+		      }
+		      convert(start,i);
+		    }catch(e){
+		      console.error(e);
+		      return null;
+		    }
+		    
+		    return new Date(dtArr[0],dtArr[1],dtArr[2],dtArr[3]||0,dtArr[4]||0,dtArr[5]||0,0);
+		}
     
     };  
     
