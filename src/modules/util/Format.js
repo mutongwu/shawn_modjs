@@ -128,9 +128,13 @@
             if(!format){
                 format = 'YYYY-MM-DD';
             }
+            function padZero(n){
+            	return n > 9 ? n : '0' + n;
+            }
             return format.replace(/YYYY/,dt.getFullYear()).
-                    replace(/MM/,dt.getMonth()+1).replace(/DD/,dt.getDate()).
-                    replace(/hh/,dt.getHours()).replace(/mm/,dt.getMinutes()).replace(/ss/,dt.getSeconds());
+                    replace(/MM/,padZero(dt.getMonth()+1)).replace(/DD/,padZero(dt.getDate())).
+                    replace(/hh/,padZero(dt.getHours())).replace(/mm/,padZero(dt.getMinutes())).
+                    replace(/ss/,padZero(dt.getSeconds()));
         },
         parseDate: function(str,fm){
             var dt = null;

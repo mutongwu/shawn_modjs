@@ -342,9 +342,8 @@
                 
                 if(this.config.type === "alert"){
                     arr.push(btn);
-                }
-                if(this.config.type === "confirm"){
-                    arr.push(btn);
+                }else if(this.config.type === "confirm"){
+                    
                     arr.push(new Button({
                     		"text":Lang.i18n('cancel'),
                             "theme": "greybtn",
@@ -358,6 +357,7 @@
                             }
                         })
                     );
+                    arr.push(btn);
                 }
                 
             }

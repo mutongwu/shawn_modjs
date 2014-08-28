@@ -7,7 +7,7 @@ border-bottom:1px solid #A9A9A9;
 .ui_msgBox_hd .ui_ico_close{position:absolute;top:5px;right:10px;font-family:"宋体";color:#666;}
 .ui_msgBox_hd .ui_ico_close:hover{color:#f00;}
 .ui_msgBox_box .ui_msgBox_msgType{position:relative;border-radius:5px;zoom:1;}
-.ui_msgBox_box .ui_msgBox_msgType .ui_msgBox_content{padding:4px 5px 4px 40px;}
+.ui_msgBox_box .ui_msgBox_msgType .ui_msgBox_content{padding:4px 5px 4px 45px;}
 /*提示的背景色*/
 .ui_msgBox_box  .ui_msgBox_info{border: 1px solid #40BEFF;	background-color: #E6F5FF;}
 .ui_msgBox_box  .ui_msgBox_warn{border: 1px solid #CB6C33;	background-color: #FFD400;}
@@ -16,7 +16,7 @@ border-bottom:1px solid #A9A9A9;
 .ui_msgBox_box  .ui_msgBox_success{border: 1px solid #4DBF00;	background-color: #F0FFE5;}
 
 /*提示的图标*/
-.ui_msgBox_box .ui_msgBox_msgType i{position:absolute;width:30px;height:30px;top:50%;margin-top:-15px;left:8px;
+.ui_msgBox_box .ui_msgBox_msgType i{position:absolute;width:30px;height:30px;top:50%;margin-top:-15px;left:12px;
 zoom:1;overflow:hidden;background:url(../img/msg_icons.png) no-repeat 0 0;_background-image:url(../img/msg_icons.gif);}
 .ui_msgBox_box .ui_msgBox_info i{background-position: 0 -124px;}
 .ui_msgBox_box .ui_msgBox_warn i{background-position: 0 0;}

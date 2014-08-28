@@ -1,3 +1,5 @@
+define('ui/Mask', function(require, exports, module){
+
 /**
  * @author shawn
  * @example 
@@ -15,9 +17,7 @@
     
     var Lang = require('lib/lang');
     
-    
-    // 遮盖层计数，值不为0时候，body的overflow属性值为 hidden.为了处理多个遮盖层的问题。
-    var ie6Hack = 0;
+
     function Mask(cfg){
         $.extend(this,{
             config:{
@@ -32,6 +32,7 @@
     }
 
     $.extend(Mask.prototype,{
+        
         defaultCfg: {
             zIndex:9000,
             
@@ -67,7 +68,6 @@
         render: function(){
         	$(document.body).append(this._html);
             this.domEl = $('#' + this.config.id);
-            this.updateDocStyle(1);
             if(this.config.loading){
                 this.loading();
             }
@@ -79,13 +79,14 @@
          */
         mask: function(){
             this.domEl.show();
+            this._ie6Resize();
         },
         /**
          * @public 关闭遮盖层
          */
         unMask: function(){
             this.domEl.remove();            
-            this.updateDocStyle(-1);
+           // this.updateDocStyle(-1);
         },
         
         /**
@@ -112,13 +113,15 @@
                 return "fixed";
             }
         },
-        updateDocStyle: function(val){
-            if(BomHelper.isIE6 && !this.config.el){
-                ie6Hack += val;
-                //document.documentElement.style.overflow = ie6Hack > 0 ?"hidden" : '';
-            }
+
+        _ie6Timer: null,
+        _ie6Resize: function(){
+        	var scrollTop = $(window).scrollTop();
+    		var el = this.domEl.find('.loading_box'),
+    			viewH = document.documentElement.clientHeight ;
+    		el.css("top",  (viewH)/2  + scrollTop);
+    		this._ie6Timer = null;
         },
-        
         bindEvents: function(){
             var _this = this;
             if(this.config.clkClose === true){
@@ -127,21 +130,14 @@
 	            });
             }
             if(BomHelper.isIE6 && !this.config.el){
-            	var timer = null,
-            		setMarginTop = function(){
-            		var scrollTop = $(window).scrollTop();
-            		var el = _this.domEl.find('.loading_box'),
-            			s1 = el.css("marginTop"),
-            			viewH = document.documentElement.clientHeight ;
-            		el.css("top",  (viewH)/2  + scrollTop);
-            		timer = null;
-            	};
+
             	$(window).scroll(function(){
-            		if(!timer){
-            			timer = setTimeout(setMarginTop,250);
+            		if(!_this._ie6Timer){
+            			_this._ie6Timer = setTimeout(function(){
+            				_this._ie6Resize();
+            			},250);
             		}            		
             	});
-            	setMarginTop();
             }
         },
         initDom: function(){
@@ -176,3 +172,6 @@
         }
     });
     module.exports =  Mask;
+
+
+});

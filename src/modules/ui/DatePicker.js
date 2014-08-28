@@ -54,7 +54,7 @@
            format: "YYYY-MM-DD",
            
            //日期最小值
-           minVal:'2012-10-05',
+           minVal:'1970-01-01',
            
            //日期最大值
            maxVal:'2970-01-01'
@@ -71,6 +71,7 @@
            var _this = this;
            this.config.el.click(function(ev){
                 ev.stopPropagation();
+                $('.ui_datePicker_box').hide();
                 _this.show();
                 
            });
@@ -270,9 +271,9 @@
            
             pos = this.config.el.offset();
             if(pos.top + height > winSize.h){
-                top = pos.top - height - this.config.el.outerHeight() - 5;
+                top = pos.top - height - this.config.el.outerHeight() - 2;
             }else{
-                top = pos.top + this.config.el.outerHeight() + 5;
+                top = pos.top + this.config.el.outerHeight() + 2;
             }
             if(pos.left + width > winSize.w){
                 left = winSize.w - width - 10;
