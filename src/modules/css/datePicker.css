@@ -20,7 +20,7 @@
 .ui_datePicker_ft td:hover{color:#f00;}
 .ui_datePicker_ft .set_clear,
 .ui_datePicker_ft .set_today,
-.ui_datePicker_ft .set_ok{display:inline-block;font-size:12px;padding:0 5px;margin:5px 0;border:1px outset #ccc;background-color:#ddd;}	
+.ui_datePicker_ft .set_ok{display:inline-block;font-size:12px;padding:0 5px;margin:5px 0;border:1px outset #f3f3f3;background-color:#AAE7EC;}	
 .ui_datePicker_timeBd {}
 .ui_datePicker_timeBd select{padding:1px;margin-left:2px;}
 .ui_datePicker_timeBd td{padding-left:5px;}
