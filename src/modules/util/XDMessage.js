@@ -8,73 +8,131 @@
  * usage:
  * 
  *  父页面：
- *  	1.嵌入iframe,name=iframe1
- *  	2.new一个通讯对象：var aMsg = new XDMessage();
- *  	3.监听iframe1的信息
-			aMsg.listen(function(msg){
-				alert('父窗口得到:' + msg);
+ *  	1.嵌入iframe,设置 name=iframe1
+ *  	2.监听iframe1的信息
+			XDMessage.listen(function(msg){
+				alert('父窗口收到:' + msg);
 			},'iframe1');
-		4.向iframe1发送信息：
-			aMsg.send("父窗口发送：" + new Date().toLocaleString(),'iframe1');
+		3.向iframe1发送信息：
+			XDMessage.send("发自父窗口的消息：" + new Date().toLocaleString(),'iframe1');
 	子页面：
-		1.new一个通讯对象：var aMsg = new XDMessage();
-		2.监听父页面的信息：
-			aMsg.listen(function(msg){
+		1.监听父页面的信息：（注意第二个参数为空！）
+			XDMessage.listen(function(msg){
 				alert('子窗口得到:' + msg);
 			});
-		3.向父页面发送信息：
-			aMsg.send('我是iframe1' + new Date().toLocaleString());
+		2.向父页面发送信息：（注意第二个参数为空！）
+			XDMessage.send('我是iframe1' + new Date().toLocaleString());
 			
 		[4].如果该页面也嵌套了iframe，name="iframe1_1"，同样可以监听它的信息：
-			aMsg.listen(function(msg){
+			XDMessage.listen(function(msg){
 				alert('子窗口得到:' + msg);
 			},'iframe1_1');
  */
 
-function XDMessage(){
-	this.init();
-}
-XDMessage.prototype = {
+var XDMessage = {
 	support :'postMessage' in window,
-
-	prefix: "",
+	
+	//targetName: [handler,...]
+	eventMap : {},
+	
+	whiteList: null,
+	
 	init: function(){
 	},
 	_listenOnce: false,
-	_onMessage: function(handler){
+	
+	
+	_checkValid: function(origin){
+		
+		if(this.whiteList && origin){
+			for(var i=0; i < this.whiteList.length; i++){
+				if(origin.indexOf(this.whiteList[i]) === 0){
+					return true;
+				} 
+			}
+			return false;
+		}
+		return true;
+	},
+	_onMessage: function(targetName){
 		if(this._listenOnce){
 			return;
 		}
-		window.addEventListener ? window.addEventListener("message", handler, false) :window.attachEvent &&  window.attachEvent("onmessage", handler) ;
+		var _this = this;
+		function msgFn(e){
+			if( !_this._checkValid(e.origin) ){
+				return;
+			}
+			var data = JSON.parse(e.data);
+			var name = data["name"];
+			var fns = _this.eventMap[name];
+			for(var i=0; i < fns.length; i++){
+				fns[i](data["msg"],e);
+			}	
+		};
+		window.addEventListener ? window.addEventListener("message",msgFn, false) : 
+			window.attachEvent &&  window.attachEvent("onmessage", msgFn) ;
 		this._listenOnce = true;
 	},
-
 	listen: function(handler,targetName){
 		if(this.support){
-			this._onMessage(function(e){
-				handler(JSON.parse(e.data));
-			});
+			targetName = targetName || window.name;
+			var fns = this.eventMap[targetName];
+			if(!fns){
+				this.eventMap[targetName] = [handler];
+			}else{
+				this.removeListen(handler, targetName);//防止同一事件函数重复
+				this.eventMap[targetName].push(handler);
+			}
+			this._onMessage();
 		}else{
 			if(!targetName){
-				targetName = window.name + 'RecvFrom'; 
+				targetName = window.name + 'RecvParent'; 
 			}else{
-				targetName += 'RecvTo'; 
+				targetName += 'RecvIframe'; 
 			}
 			navigator[targetName] = handler;
 		}
 	},
-	send: function(msg,targetName){
-		var win = parent;
-		if(targetName){
-			win = window.frames[targetName];
-		}
+	removeListen: function(handler,targetName){
 		if(this.support){
-			win.postMessage(JSON.stringify(msg),'*');
+			targetName = targetName || window.name;
+			var fns = this.eventMap[targetName];
+			if(fns){
+				for(var i=0; i < fns.length;i++){
+					if(fns[i] === handler){
+						fns.splice(i,1);
+						return true;
+					}
+				}
+			}			
 		}else{
 			if(!targetName){
-				targetName = window.name + 'RecvTo';
+				targetName = window.name + 'RecvParent'; 
 			}else{
-				targetName += 'RecvFrom'; 
+				targetName += 'RecvIframe'; 
+			}
+			navigator[targetName] = null;
+		}
+	},
+	send: function(msg,targetName){
+		if(this.support){
+			var win = null;
+			if(targetName){
+				win = window.frames[targetName];
+			}else{
+				win = parent;
+				targetName = window.name;
+			}
+			win.postMessage(JSON.stringify({
+				name: targetName,
+				msg: msg
+			}),'*');
+		}else{
+			if(!targetName){
+				targetName = window.name + 'RecvIframe';
+			}else{
+				targetName += 'RecvParent'; 
 			}
 			navigator[targetName] && navigator[targetName](msg);
 		}

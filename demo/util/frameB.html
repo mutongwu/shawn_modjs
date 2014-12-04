@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="XDMessage.js"></script>
+<style>
+
+</style>
+</head>
+<body>
+	<input type="text"  value="我是frameB.html" id="valueField"/>
+	<input type="button" id="btn" value="发送数据A"/>
+	<input type="button" id="btn1" value="发送数据c1"/>
+	<input type="button" id="btn2" value="发送数据c2"/>
+	<br/>
+	<div id="log" style="background:#000;color:green;height:200px;margin:20px 0;width:50%;"></div>
+	<br/>
+	<iframe src="C1.html" name="frameC1" frameborder="1" width="45%" height="300px" style="border-color:blue;margin-left:20px;"></iframe>
+	<iframe src="C2.html" name="frameC2" frameborder="1" width="45%" height="300px" style="border-color:red;margin-left:20px;"></iframe>
+<script>
+	var log = document.getElementById("log");
+	XDMessage.listen(function(msg){
+		
+		log.innerHTML += "<BR/>" +  'B得到:' + msg;
+		
+	});
+
+	XDMessage.listen(function(msg,e){
+		log.innerHTML += "<BR/>" +  'B得到【frameC1】:' + msg;	
+	},"frameC1");
+	
+	XDMessage.listen(function(msg){
+		log.innerHTML += "<BR/>" +  'B得到【frameC2】:' + msg;
+	},"frameC2");
+	
+	
+	document.getElementById('btn').onclick = function(){
+		var val = document.getElementById('valueField').value;
+		XDMessage.send(val);
+	};
+	
+	
+	document.getElementById('btn1').onclick = function(){
+		var val = document.getElementById('valueField').value;
+		XDMessage.send(val,"frameC1");
+	};
+	
+	document.getElementById('btn2').onclick = function(){
+		var val = document.getElementById('valueField').value;
+		XDMessage.send(val,"frameC2");
+	};
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="XDMessage.js"></script>
+<style>
+
+</style>
+</head>
+<body>
+	<input type="text"  value="我是C1.html" id="valueField"/>
+	<input type="button" id="btn" value="发送数据"/>
+	<div id="log" style="background:#000;color:green;height:200px;margin:20px 0;width:50%;"></div>
+	
+<script>
+	var log = document.getElementById("log");
+	var fn = function(msg){
+		log.innerHTML += "<BR/>" +  'C1得到:' + msg;
+	};
+	XDMessage.listen(fn);
+	
+	//重复侦听。
+	XDMessage.listen(fn);
+	document.getElementById('btn').onclick = function(){
+		var val = document.getElementById('valueField').value;
+		XDMessage.send(val);
+		
+		//取消侦听
+		XDMessage.removeListen(fn);
+	};
+</script>
+</body>
+</html>
